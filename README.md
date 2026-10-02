@@ -25,13 +25,13 @@
 ## 🚀 Installation
 
 ### Option 1: Download APK
-1. Go to the [Releases](https://github.com/YOUR_USERNAME/MemoRecite/releases) page
+1. Go to the [Releases](https://github.com/maggiehuang7/MemoRecite/releases) page
 2. Download the latest `app-release.apk`
 3. Tap to install on your phone (allow "Unknown sources")
 
 ### Option 2: Build from source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/MemoRecite.git
+git clone https://github.com/maggiehuang7/MemoRecite.git
 cd MemoRecite
 ./gradlew assembleDebug
