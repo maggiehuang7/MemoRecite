@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">锁屏记忆</string>
+
+    <!-- 通用 -->
+    <string name="common_ok">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_save">保存</string>
+    <string name="common_delete">删除</string>
+    <string name="common_close">关闭</string>
+    <string name="common_edit">编辑</string>
+    <string name="common_add">添加</string>
+    <string name="common_next">下一步</string>
+    <string name="common_input_empty">内容不能为空</string>
+    <string name="common_back">← 返回</string>
+
+    <!-- 设置页 -->
+    <string name="settings_title">⚙️ 全局默认设置</string>
+    <string name="settings_subtitle">这里的值只作为「新建记忆组」时的默认值。已经建好的组，请长按组 → ⚙️ 组设置 单独调整。</string>
+    <string name="settings_first_delay">首次复习延迟（分钟）</string>
+    <string name="settings_intervals">复习间隔（分钟，英文逗号分隔）</string>
+    <string name="settings_intervals_hint">💡 默认艾宾浩斯：5分, 30分, 12时, 1天, 2天, 4天, 7天, 15天, 30天, 60天</string>
+    <string name="settings_save">保存设置</string>
+    <string name="settings_reset">恢复艾宾浩斯默认</string>
+    <string name="settings_quiet_title">🔇 免打扰</string>
+    <string name="settings_quiet_button">🔇 免打扰时段（默认 00:00-06:00）</string>
+    <string name="settings_backup_title">💾 数据备份</string>
+    <string name="settings_backup_desc">定期导出备份，防止数据意外丢失。</string>
+    <string name="settings_export">📤 导出数据备份到文件</string>
+    <string name="settings_import">📥 从备份恢复数据</string>
+    <string name="settings_language_title">🌐 语言</string>
+    <string name="settings_language_button">🌐 语言（当前：%s）</string>
+    <string name="settings_lang_changed">语言已切换，App 将重启。</string>
+
+    <!-- 组列表页 -->
+    <string name="gl_title">📚 记忆组</string>
+    <string name="gl_sub_title">📁 %s</string>
+    <string name="gl_new_group">+ 新建组</string>
+    <string name="gl_new_sub">+ 新建子组</string>
+    <string name="gl_test_now">🔔 立即测试锁屏弹出</string>
+    <string name="gl_statistics">📊</string>
+    <string name="gl_settings">⚙️</string>
+    <string name="gl_pc_upload">💻</string>
+    <string name="gl_menu_open">📂 打开</string>
+    <string name="gl_menu_settings">⚙️ 组设置</string>
+    <string name="gl_menu_rename">✏️ 重命名</string>
+    <string name="gl_menu_delete">🗑️ 删除</string>
+    <string name="gl_menu_delete_with_children">🗑️ 删除（含 %d 个子组）</string>
+    <string name="gl_dialog_new_group">新建组</string>
+    <string name="gl_dialog_new_sub">新建子组</string>
+    <string name="gl_dialog_rename">重命名</string>
+    <string name="gl_dialog_delete">确认删除</string>
+    <string name="gl_dialog_pick_icon">选择图标</string>
+    <string name="gl_hint_group_name">组名，例如：Unit 1</string>
+    <string name="gl_next">下一步</string>
+    <string name="gl_toast_empty_name">组名不能为空</string>
+    <string name="gl_toast_no_content">这个组还没有内容</string>
+    <string name="gl_toast_no_cards">请先添加卡片</string>
+    <string name="gl_delete_msg">删除后无法恢复，确定吗？</string>
+    <string name="gl_delete_msg_with_children">将删除此组及其 %d 个子组，以及所有卡片和图片。\n\n删除后无法恢复，确定吗？</string>
+    <string name="gl_info_children">📁 %d 个子组</string>
+    <string name="gl_info_cards">🗂 %d 张</string>
+    <string name="gl_info_empty">空</string>
+    <string name="gl_info_separator"> · </string>
+    <string name="gl_info_due">🔔 %d 张待复习</string>
+    <string name="gl_info_start_at">⏸️ %s 开始</string>
+    <string name="gl_info_next">⏰ %s</string>
+    <string name="gl_test_title">🔔 准备就绪</string>
+    <string name="gl_test_msg">请立即按 Home 键回到桌面，然后锁屏。\n\n5 秒后将自动弹出卡片 + 震动。</string>
+    <string name="gl_test_ok">知道了</string>
+
+    <!-- 卡片列表页 -->
+    <string name="cl_new_card">+ 新建卡片</string>
+    <string name="cl_bulk_add">📥 批量添加</string>
+    <string name="cl_select_all">全选</string>
+    <string name="cl_adjust">调整</string>
+    <string name="cl_delete">删除</string>
+    <string name="cl_cancel">取消</string>
+    <string name="cl_long_press">长按卡片可批量操作</string>
+    <string name="cl_empty">还没有卡片\n\n点下方「+ 新建卡片」开始</string>
+    <string name="cl_date_filter">📅 按上传时间筛选</string>
+    <string name="cl_build_sub">📁 建子组</string>
+    <string name="cl_selected_count">已选 %d 项</string>
+    <string name="cl_filter_all">全部（%d）</string>
+    <string name="cl_filter_hour">%1$s（%2$d）</string>
+    <string name="cl_today">今天</string>
+    <string name="cl_yesterday">昨天</string>
+    <string name="cl_delete_title">删除 %d 张卡片</string>
+    <string name="cl_delete_msg">删除后无法恢复，确定？\n\n（删除前会自动创建永久快照）</string>
+    <string name="cl_deleted_toast">已删除 %d 张</string>
+    <string name="cl_select_hint">请先选择卡片</string>
+    <string name="cl_batch_title">批量调整 %d 张卡片</string>
+    <string name="cl_batch_custom_curve">📈 自定义复习曲线（完整编辑）</string>
+    <string name="cl_batch_clear_curve">🔄 清除自定义曲线（回归组默认）</string>
+    <string name="cl_batch_start_time">⏰ 设置首次复习时间（自定义）</string>
+    <string name="cl_batch_reset_new">🆕 重置为新卡（重新开始）</string>
+    <string name="cl_batch_now">⏰ 全部改为立即复习</string>
+    <string name="cl_batch_10min">⏰ 全部延迟 10 分钟</string>
+    <string name="cl_batch_1h">⏰ 全部延迟 1 小时</string>
+    <string name="cl_batch_1d">⏰ 全部延迟 1 天</string>
+    <string name="cl_batch_mastered">✅ 全部标为已掌握</string>
+    <string name="cl_batch_level_plus">🔄 复习级别 +1</string>
+    <string name="cl_adjusted_toast">已调整 %d 张</string>
+    <string name="cl_cleared_curve_toast">已清除 %d 张的自定义曲线</string>
+    <string name="cl_curve_set_toast">✅ 已为 %1$d 张卡片设置自定义曲线（%2$d 级）</string>
+    <string name="cl_curve_default_toast">已回归组默认曲线</string>
+    <string name="cl_time_set_toast">✅ 已设置 %1$d 张卡片的复习时间为 %2$s</string>
+    <string name="cl_bulk_added_toast">添加了 %d 张</string>
+    <string name="cl_no_content">没有内容</string>
+    <string name="cl_bulk_add_title">批量添加到「%s」</string>
+    <string name="cl_bulk_hint">每行一张卡片\n格式1：问题|答案\n格式2：仅答案</string>
+    <string name="cl_sub_group_title">在「%s」下新建子组</string>
+    <string name="cl_sub_group_hint">子组名，例如：Unit 1</string>
+    <string name="cl_sub_created_title">✅ 子组已创建</string>
+    <string name="cl_sub_created_msg">「%1$s」下已添加子组「%2$s」。\n\n返回上一层可以看到它。</string>
+    <string name="cl_pick_icon">选择图标</string>
+
+    <!-- 曲线编辑器 -->
+    <string name="curve_title">编辑 %d 张卡片的复习曲线</string>
+    <string name="curve_level">第 %d 级</string>
+    <string name="curve_minutes"> 分钟</string>
+    <string name="curve_hint">💡 上面的值表示第 N 次复习的间隔（分钟）</string>
+    <string name="curve_preset_title">⚡ 快速应用预设</string>
+    <string name="curve_preset_applied">已应用：%s</string>
+    <string name="curve_use_default">用组默认</string>
+    <string name="curve_need_one">至少填一个有效间隔</string>
+    <string name="curve_preset_default">默认（艾宾浩斯）</string>
+    <string name="curve_preset_dense">密集（短期突击）</string>
+    <string name="curve_preset_loose">宽松（长期记忆）</string>
+    <string name="curve_preset_easy">简单（一眼会）</string>
+    <string name="curve_preset_stubborn">顽固（总记不住）</string>
+
+    <!-- 开始时间编辑器 -->
+    <string name="start_time_title">设置 %d 张卡片的首次复习时间</string>
+    <string name="start_time_now">立即开始</string>
+    <string name="start_time_1h">1 小时后</string>
+    <string name="start_time_3h">3 小时后</string>
+    <string name="start_time_tomorrow">明天早上 8:00</string>
+    <string name="start_time_3d">3 天后</string>
+    <string name="start_time_7d">7 天后</string>
+    <string name="start_time_custom">📅 自定义日期时间</string>
+
+    <!-- 卡片编辑页 -->
+    <string name="ce_front">问题（可选）</string>
+    <string name="ce_front_hint">例如：apple</string>
+    <string name="ce_back">内容 / 答案（必填）</string>
+    <string name="ce_back_hint">例如：苹果</string>
+    <string name="ce_image">🖼️ 图片（可选）</string>
+    <string name="ce_pick_image">选择图片</string>
+    <string name="ce_remove_image">删除图片</string>
+    <string name="ce_save">保存</string>
+    <string name="ce_empty_back">内容不能为空</string>
+    <string name="ce_img_failed">图片加载失败</string>
+
+    <!-- 锁屏弹卡页 -->
+    <string name="md_forgot">忘了</string>
+    <string name="md_vague">模糊</string>
+    <string name="md_good">记住了</string>
+    <string name="md_skip">稍后再背这组 ›</string>
+    <string name="md_progress">第 %1$d 级 · %2$s</string>
+    <string name="md_new_card">新卡片</string>
+    <string name="md_due">🔔 待复习</string>
+    <string name="md_due_overdue">🔔 待复习（超时 %s）</string>
+    <string name="md_countdown_new">🆕 %s后</string>
+    <string name="md_countdown">%s后</string>
+    <string name="md_seconds">%d秒</string>
+    <string name="md_minutes">%d分钟</string>
+    <string name="md_hours">%d小时</string>
+    <string name="md_days">%d天</string>
+
+    <!-- 组设置页 -->
+    <string name="gs_title">%s · 设置</string>
+    <string name="gs_inherit_from">\n(继承自：%s)</string>
+    <string name="gs_start_time">⏰ 开始复习时间</string>
+    <string name="gs_start_now">立即</string>
+    <string name="gs_start_1h">+1时</string>
+    <string name="gs_start_tomorrow">明天</string>
+    <string name="gs_start_custom">自定义</string>
+    <string name="gs_started">已开始</string>
+    <string name="gs_first_delay">首次复习延迟（分钟）</string>
+    <string name="gs_batch_size">每次弹出数量（张）</string>
+    <string name="gs_batch_hint">💡 锁屏一次弹这么多张，背完自动弹下一批</string>
+    <string name="gs_intervals">复习间隔（分钟，英文逗号分隔）</string>
+    <string name="gs_intervals_hint">💡 默认：5分, 30分, 12时, 1天, 2天, 4天, 7天, 15天, 30天, 60天</string>
+    <string name="gs_save">保存设置</string>
+    <string name="gs_reset">恢复艾宾浩斯默认</string>
+    <string name="gs_bulk_import">📥 批量导入到本组</string>
+    <string name="gs_reset_progress">🔄 重置本组复习进度</string>
+    <string name="gs_saved">已保存</string>
+    <string name="gs_reset_default">已恢复默认，记得点保存</string>
+    <string name="gs_reset_progress_title">重置进度</string>
+    <string name="gs_reset_progress_msg">该组所有卡片的复习进度将清零，确定？</string>
+    <string name="gs_reset_done">已重置</string>
+    <string name="gs_bulk_imported">已导入 %d 张</string>
+    <string name="gs_batch_invalid">每次弹出数量至少为 1</string>
+    <string name="gs_first_delay_invalid">首次延迟无效</string>
+    <string name="gs_intervals_invalid">间隔不能为空</string>
+
+    <!-- 统计页 -->
+    <string name="st_title">📊 复习进度</string>
+    <string name="st_summary">共 %1$d 组 · %2$d 张卡片 · 已掌握 %3$d 张</string>
+    <string name="st_mastered">已掌握 %d</string>
+    <string name="st_reviewing">巩固中 %d</string>
+    <string name="st_new">新卡 %d</string>
+    <string name="st_due">待复习 %d</string>
+    <string name="st_separator"> · </string>
+    <string name="st_percent">%d%%</string>
+
+    <!-- 电脑上传页 -->
+    <string name="pc_title">💻 电脑上传</string>
+    <string name="pc_back">← 返回</string>
+    <string name="pc_group_name">目标组名</string>
+    <string name="pc_group_hint">电脑上传</string>
+    <string name="pc_url_label">访问地址</string>
+    <string name="pc_url_empty">（点击下方按钮启动服务器）</string>
+    <string name="pc_start">启动服务器</string>
+    <string name="pc_stop">停止服务器</string>
+    <string name="pc_stopped">⚪ 服务器已停止\n\n点击下方按钮重新启动</string>
+    <string name="pc_running">🟢 服务器运行中\n\n在电脑浏览器打开上面的地址即可上传\n（手机和电脑要连同一个 WiFi）</string>
+    <string name="pc_stopped_url">（已停止）</string>
+    <string name="pc_received">✅ 已接收 %d 张卡片</string>
+    <string name="pc_no_wifi">未连接到 WiFi，请先连上同一 WiFi</string>
+    <string name="pc_start_failed">启动失败：%s</string>
+
+    <!-- 批量导入页 -->
+    <string name="bi_title">📥 批量导入</string>
+    <string name="bi_target">导入到：%s</string>
+    <string name="bi_text_label">📝 文字（每行一张，格式：问题|答案）</string>
+    <string name="bi_text_hint">apple|苹果\nbanana|香蕉\ncat|猫</string>
+    <string name="bi_image_label">🖼️ 图片（可选，按顺序与上面的文字一一配对）</string>
+    <string name="bi_pick_images">选择图片（可多选）</string>
+    <string name="bi_preview_label">📋 预览</string>
+    <string name="bi_preview_empty">（还没有文字内容）</string>
+    <string name="bi_import">导入</string>
+    <string name="bi_imported">成功导入 %d 张卡片</string>
+    <string name="bi_no_content">请输入文字内容</string>
+
+    <!-- 权限引导 -->
+    <string name="perm_title">开启两个权限，才能锁屏自动弹卡片</string>
+    <string name="perm_msg">① 悬浮窗权限：让后台能直接弹卡片\n② 电池不优化：让系统不杀后台\n\n点「去设置」后按顺序开一下就行。</string>
+    <string name="perm_go_settings">去设置</string>
+    <string name="perm_later">暂不</string>
+    <string name="perm_manual">请手动去设置 → 电池 → 找到 MemoRecite</string>
+
+    <!-- 导入/导出 -->
+    <string name="import_ok_title">✅ 导入成功</string>
+    <string name="import_ok_msg">数据已恢复。\n\n请完全退出 App（从最近任务划掉），再重新打开。</string>
+    <string name="import_failed">导入失败：%s</string>
+    <string name="export_ok_title">✅ 备份成功</string>
+    <string name="export_ok_msg">文件已保存到：\n\n%s\n\n建议把文件复制到电脑或云盘长期保存。</string>
+    <string name="export_failed">导出失败：%s</string>
+    <string name="export_no_data">没有数据可导出</string>
+    <string name="import_choose">📁 从文件选择</string>
+    <string name="import_from_builtin">🗂️ 从内置备份恢复（%d 个可用）</string>
+    <string name="import_pick_backup">选择要恢复的备份（%d 个可用）</string>
+    <string name="import_confirm">确认恢复</string>
+    <string name="import_confirm_msg">级别：%1$s\n时间：%2$s\n卡片：%3$d 张\n大小：%4$d KB\n\n当前数据会先被自动备份为【永久快照】，然后用这份备份替换。\n\n确定恢复吗？</string>
+    <string name="import_restore">恢复</string>
+    <string name="import_restore_ok">✅ 恢复成功</string>
+    <string name="import_restore_ok_msg">请完全退出 App 再重新打开，才能看到恢复的数据。</string>
+    <string name="import_restore_failed">恢复失败</string>
+
+    <!-- 时间格式 -->
+    <string name="time_format">MM-dd HH:mm</string>
+</resources>

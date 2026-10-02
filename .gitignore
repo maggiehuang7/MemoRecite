@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+local.properties
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# APK / AAB
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# 签名文件（重要！不要上传）
+*.jks
+*.keystore
+!debug.keystore
+
+# 日志
+*.log
+
+# 环境文件
+.env

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MemoRecite · 电脑上传</title>
+        <style>
+  * { box-sizing: border-box; }
+  body {
+    background: #0F1419; color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0; padding: 32px 20px; min-height: 100vh;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 8px; }
+  .subtitle { color: #8B95A5; font-size: 14px; margin-bottom: 20px; }
+  .target-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: #1A1F2E; border: 1px solid #2A3142;
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .target-bar label { color: #8B95A5; font-size: 13px; }
+  select, .target-bar input[type=text] {
+    background: #0F1419; color: #7FA8F5; border: 1px solid #2A3142;
+    border-radius: 8px; padding: 10px 14px; font-size: 14px;
+    font-family: inherit; outline: none; min-width: 180px;
+    font-weight: 600;
+  }
+  select:focus, .target-bar input[type=text]:focus { border-color: #5B8DEF; }
+  .target-bar input[type=text] { display: none; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: #1A1F2E; border: 1px solid #2A3142; border-radius: 14px; padding: 20px;
+  }
+  .panel h2 {
+    font-size: 15px; color: #8B95A5; margin: 0 0 14px;
+    font-weight: 500; display: flex; align-items: center; justify-content: space-between;
+  }
+  .badge {
+    background: #5B8DEF; color: #fff; font-size: 11px;
+    padding: 3px 8px; border-radius: 6px; font-weight: 600;
+  }
+  textarea {
+    width: 100%; min-height: 300px; background: #0F1419;
+    border: 1px solid #2A3142; border-radius: 10px; color: #fff;
+    padding: 14px; font-size: 14px; font-family: "SF Mono", Consolas, monospace;
+    resize: vertical; line-height: 1.7; outline: none; transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: #5B8DEF; }
+  textarea::placeholder { color: #5A6372; }
+  .hint { color: #5A6372; font-size: 12px; margin-top: 10px; line-height: 1.6; }
+  .dropzone {
+    border: 2px dashed #2A3142; border-radius: 10px;
+    padding: 24px 16px; text-align: center; cursor: pointer;
+    transition: all 0.2s; min-height: 120px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .dropzone:hover, .dropzone.dragover {
+    border-color: #5B8DEF; background: rgba(91, 141, 239, 0.05);
+  }
+  .dropzone .icon { font-size: 32px; margin-bottom: 8px; }
+  .dropzone .text { color: #8B95A5; font-size: 13px; }
+  .dropzone .small { color: #5A6372; font-size: 11px; margin-top: 4px; }
+  input[type=file] { display: none; }
+  .preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px; margin-top: 14px;
+    max-height: 460px; overflow-y: auto; padding-right: 4px;
+  }
+  .preview-item {
+    display: flex; flex-direction: column;
+    background: #0F1419; border-radius: 8px; overflow: hidden;
+  }
+  .preview-img { position: relative; aspect-ratio: 1; }
+  .preview-img img { width: 100%; height: 100%; object-fit: cover; }
+  .preview-img .del {
+    position: absolute; top: 4px; right: 4px;
+    background: rgba(239, 83, 80, 0.9); color: #fff;
+    font-size: 14px; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-weight: 700;
+  }
+  .preview-img .fname {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.7); color: #ccc;
+    font-size: 10px; padding: 3px 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .preview-line {
+    display: flex; align-items: center; padding: 6px 8px;
+    background: #232A3D; gap: 6px;
+  }
+  .preview-line label { color: #8B95A5; font-size: 11px; }
+  .preview-line input {
+    flex: 1; background: #0F1419; border: 1px solid #2A3142;
+    border-radius: 4px; color: #7FA8F5; font-size: 13px;
+    padding: 4px 6px; text-align: center; font-weight: 600;
+    outline: none; width: 100%;
+  }
+  .preview-line input:focus { border-color: #5B8DEF; }
+  .footer {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .summary { color: #8B95A5; font-size: 13px; }
+  .summary strong { color: #7FA8F5; font-size: 15px; }
+  button {
+    background: #5B8DEF; color: #fff; border: none;
+    padding: 14px 32px; border-radius: 10px; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  button:hover { background: #7FA8F5; }
+  button:disabled { background: #2A3142; color: #5A6372; cursor: not-allowed; }
+  .status {
+    margin-top: 20px; padding: 14px 18px; border-radius: 10px;
+    font-size: 14px; display: none;
+  }
+  .status.ok { background: rgba(102, 187, 106, 0.15); color: #66BB6A; display: block; }
+  .status.err { background: rgba(239, 83, 80, 0.15); color: #EF5350; display: block; }
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid #fff; border-top-color: transparent;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    vertical-align: middle; margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📥 电脑上传到手机</h1>
+            <div class="subtitle">粘贴文字、拖拽图片，每张图可指定对应行</div>
+
+            <div class="target-bar">
+                <label>📁 上传到：</label>
+                <select id="groupSelect"></select>
+                <input type="text" id="newGroupInput" placeholder="输入新组名..." />
+            </div>
+
+            <div class="grid">
+                <div class="panel">
+                    <h2>📝 文字内容 <span class="badge" id="lineCount">0 行</span></h2>
+                    <textarea id="text" placeholder="每行一张卡片。&#10;&#10;示例：&#10;apple|苹果&#10;banana|香蕉&#10;cat|猫"></textarea>
+                    <div class="hint">💡 用 <code>|</code> 分隔问题和答案，不写 | 则整行为答案</div>
+                </div>
+
+                <div class="panel">
+                    <h2>🖼️ 图片（可选） <span class="badge" id="imgCount">0 张</span></h2>
+                    <div class="dropzone" id="dropzone">
+                        <div class="icon">📷</div>
+                        <div class="text">点击选择图片 或 拖拽到这里</div>
+                        <div class="small">每张图下方可手动指定"对应第几行"</div>
+                    </div>
+                    <input type="file" id="fileInput" multiple accept="image/*">
+                    <div class="preview" id="preview"></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="summary">
+                    共 <strong id="finalCount">0</strong> 张卡片待上传，
+                    其中 <strong id="withImageCount">0</strong> 张带图片
+                </div>
+                <button id="submitBtn" disabled>上传到手机</button>
+            </div>
+
+            <div class="status" id="status"></div>
+        </div>
+
+        <script>
+  const textEl = document.getElementById('text');
+  const fileInput = document.getElementById('fileInput');
+  const dropzone = document.getElementById('dropzone');
+  const preview = document.getElementById('preview');
+  const lineCountEl = document.getElementById('lineCount');
+  const imgCountEl = document.getElementById('imgCount');
+  const finalCountEl = document.getElementById('finalCount');
+  const withImageCountEl = document.getElementById('withImageCount');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('status');
+  const groupSelect = document.getElementById('groupSelect');
+  const newGroupInput = document.getElementById('newGroupInput');
+
+  const DEFAULT_GROUP = "电脑上传";
+  const NEW_GROUP_VALUE = "__NEW__";
+
+  let imageItems = [];
+
+  async function loadGroups() {
+    try {
+      const res = await fetch('/groups');
+      const groups = await res.json();
+      groupSelect.innerHTML = '';
+
+      groups.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = '📚 ' + name;
+        groupSelect.appendChild(opt);
+      });
+
+      const newOpt = document.createElement('option');
+      newOpt.value = NEW_GROUP_VALUE;
+      newOpt.textContent = '➕ 新建组...';
+      groupSelect.appendChild(newOpt);
+
+      const idx = groups.indexOf(DEFAULT_GROUP);
+      if (idx >= 0) {
+        groupSelect.value = DEFAULT_GROUP;
+      } else if (groups.length > 0) {
+        groupSelect.value = groups[0];
+      } else {
+        groupSelect.value = NEW_GROUP_VALUE;
+      }
+
+      onGroupChange();
+    } catch (e) {
+      groupSelect.innerHTML = '<option value="' + NEW_GROUP_VALUE + '">➕ 新建组...</option>';
+      groupSelect.value = NEW_GROUP_VALUE;
+      onGroupChange();
+    }
+  }
+
+  function onGroupChange() {
+    if (groupSelect.value === NEW_GROUP_VALUE) {
+      newGroupInput.style.display = 'inline-block';
+      newGroupInput.value = DEFAULT_GROUP;
+    } else {
+      newGroupInput.style.display = 'none';
+    }
+  }
+
+  groupSelect.addEventListener('change', onGroupChange);
+
+  function getTargetGroup() {
+    if (groupSelect.value === NEW_GROUP_VALUE) {
+      const name = newGroupInput.value.trim();
+      return name || DEFAULT_GROUP;
+    }
+    return groupSelect.value;
+  }
+
+  function getLineCount() {
+    return textEl.value.split('\n').map(s => s.trim()).filter(s => s.length > 0).length;
+  }
+
+  function updateCounts() {
+    const lines = getLineCount();
+    lineCountEl.textContent = lines + ' 行';
+    imgCountEl.textContent = imageItems.length + ' 张';
+    finalCountEl.textContent = lines;
+
+    const usedLines = new Set();
+    imageItems.forEach(item => {
+      if (item.line >= 1 && item.line <= lines) usedLines.add(item.line);
+    });
+    withImageCountEl.textContent = usedLines.size;
+
+    if (lines > 0) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '上传 ' + lines + ' 张卡片';
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '请先输入文字';
+    }
+  }
+
+  function renderPreview() {
+    preview.innerHTML = '';
+    imageItems.forEach((item, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'preview-item';
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'preview-img';
+
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(item.file);
+      imgWrap.appendChild(img);
+
+      const del = document.createElement('div');
+      del.className = 'del';
+      del.textContent = '×';
+      del.onclick = () => {
+        imageItems.splice(i, 1);
+        renderPreview();
+        updateCounts();
+      };
+      imgWrap.appendChild(del);
+
+      const fname = document.createElement('div');
+      fname.className = 'fname';
+      fname.textContent = item.file.name || ('图片' + (i + 1));
+      imgWrap.appendChild(fname);
+
+      wrap.appendChild(imgWrap);
+
+      const lineWrap = document.createElement('div');
+      lineWrap.className = 'preview-line';
+
+      const label = document.createElement('label');
+      label.textContent = '对第';
+      lineWrap.appendChild(label);
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = 1;
+      input.value = item.line;
+      input.oninput = () => {
+        const v = parseInt(input.value, 10);
+        item.line = (isNaN(v) || v < 1) ? 1 : v;
+        updateCounts();
+      };
+      lineWrap.appendChild(input);
+
+      const suffix = document.createElement('label');
+      suffix.textContent = '行';
+      lineWrap.appendChild(suffix);
+
+      wrap.appendChild(lineWrap);
+      preview.appendChild(wrap);
+    });
+  }
+
+  textEl.addEventListener('input', () => {
+    const totalLines = getLineCount();
+    if (totalLines > 0) {
+      imageItems.forEach(item => {
+        if (item.line > totalLines) item.line = totalLines;
+      });
+    }
+    updateCounts();
+  });
+
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', (e) => {
+    addFiles(Array.from(e.target.files));
+    fileInput.value = '';
+  });
+
+  function addFiles(files) {
+    const startLine = imageItems.length + 1;
+    files.forEach((file, idx) => {
+      imageItems.push({
+        file: file,
+        line: startLine + idx
+      });
+    });
+    renderPreview();
+    updateCounts();
+  }
+
+  ['dragenter', 'dragover'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+    });
+  });
+  dropzone.addEventListener('drop', (e) => {
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    addFiles(files);
+  });
+
+  function toBase64(str) {
+    const utf8Bytes = new TextEncoder().encode(str);
+    let binary = '';
+    utf8Bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    const text = textEl.value;
+    if (!text.trim()) return;
+
+    const targetGroup = getTargetGroup();
+    if (!targetGroup) {
+      statusEl.className = 'status err';
+      statusEl.textContent = '❌ 请填写组名';
+      statusEl.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>上传中...';
+    statusEl.className = 'status';
+    statusEl.style.display = 'none';
+
+    try {
+      const formData = new FormData();
+      formData.append('text_b64', toBase64(text));
+      formData.append('group_b64', toBase64(targetGroup));
+
+      imageItems.forEach(item => {
+        const key = 'img_' + item.line;
+        formData.append(key, item.file, item.file.name || 'image.jpg');
+      });
+
+      const res = await fetch('/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.ok) {
+        statusEl.className = 'status ok';
+        statusEl.textContent = '✅ 成功上传 ' + data.count + ' 张卡片到「' + data.group + '」，其中 ' + data.images + ' 张带图片！';
+        statusEl.style.display = 'block';
+        textEl.value = '';
+        imageItems = [];
+        renderPreview();
+        updateCounts();
+        loadGroups();
+      } else {
+        throw new Error(data.error || '上传失败');
+      }
+    } catch (err) {
+      statusEl.className = 'status err';
+      statusEl.textContent = '❌ ' + (err.message || '上传失败，请重试');
+      statusEl.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      updateCounts();
+    }
+  });
+
+  loadGroups();
+  updateCounts();
+</script>
+    </body>
+</html>
