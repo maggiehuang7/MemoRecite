@@ -81,6 +81,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnQuietTime).setOnClickListener { showQuietTimeSettings() }
+        findViewById<Button>(R.id.btnPermissions).setOnClickListener { PermissionUtils.showBackgroundPermissionGuideDialog(this) }
         findViewById<Button>(R.id.btnExport).setOnClickListener { exportData() }
         findViewById<Button>(R.id.btnImport).setOnClickListener { showImportOptions() }
     }

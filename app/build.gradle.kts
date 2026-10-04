@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // ========== Release 签名配置 ==========
     signingConfigs {
         create("release") {
             storeFile = file("/Users/maggie/memorecite-key.jks")
@@ -54,15 +55,9 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
-
-    // ✅ 降级：1.8.0 → 1.7.2（兼容 compileSdk 33）
     implementation("androidx.activity:activity-ktx:1.7.2")
-
     implementation("com.google.code.gson:gson:2.10.1")
-
-    // ✅ 降级：2.4.0 → 2.2.2（兼容 compileSdk 33）
     implementation("io.coil-kt:coil:2.2.2")
-
     implementation("org.nanohttpd:nanohttpd:2.3.1")
 
     testImplementation("junit:junit:4.13.2")

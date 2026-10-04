@@ -32,6 +32,7 @@
         <activity
             android:name=".GroupListActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,19 +40,39 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CardListActivity" android:exported="false"
+        <activity
+            android:name=".CardListActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".CardEditActivity" android:exported="false"
+
+        <activity
+            android:name=".CardEditActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".SettingsActivity" android:exported="false"
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".GroupSettingsActivity" android:exported="false"
+
+        <activity
+            android:name=".GroupSettingsActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".StatsActivity" android:exported="false"
+
+        <activity
+            android:name=".StatsActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".BulkImportActivity" android:exported="false"
+
+        <activity
+            android:name=".BulkImportActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".PCUploadActivity" android:exported="false"
+
+        <activity
+            android:name=".PCUploadActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <activity
@@ -64,11 +85,17 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.MemoDisplay" />
 
-        <activity android:name=".MainActivity" android:exported="false"
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <receiver
             android:name=".MemoAlarmReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".SelfWakeupReceiver"
             android:exported="false" />
 
         <receiver
@@ -82,8 +109,6 @@
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <!-- 🟢 ScreenStateReceiver 现在在 KeepAliveService 里动态注册，不需要静态声明 -->
 
         <service
             android:name=".KeepAliveService"

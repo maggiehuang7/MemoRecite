@@ -22,6 +22,10 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // 🟢 进程初始化时重置前台及残留暂停状态
+        resetForeground()
+        Prefs.clearPause(this)
+
         try { KeepAliveService.start(this) } catch (_: Exception) {}
         try { AlarmScheduler.scheduleNext(this) } catch (_: Exception) {}
 
@@ -32,7 +36,6 @@ class App : Application() {
                 startedCount++
                 if (startedCount == 1) {
                     isForeground = true
-                    Prefs.pauseFor(applicationContext, PAUSE_MILLIS)
                 }
             }
 
@@ -44,6 +47,7 @@ class App : Application() {
                     isForeground = false
                     Prefs.clearPause(applicationContext)
                     try { KeepAliveService.start(applicationContext) } catch (_: Exception) {}
+                    try { AlarmScheduler.scheduleNext(applicationContext) } catch (_: Exception) {}
                 }
             }
 

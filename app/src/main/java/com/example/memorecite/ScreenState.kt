@@ -2,6 +2,7 @@ package com.example.memorecite
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.os.PowerManager
 
 object ScreenState {
 
@@ -14,18 +15,23 @@ object ScreenState {
     private fun prefs(ctx: Context) =
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    /**
-     * 🟢 设备是否"锁定"（未真正解锁）
-     *
-     * 用 isDeviceLocked()：
-     * - 锁屏界面 → true
-     * - 滑到 PIN/图案输入界面 → **仍为 true** ✅
-     * - 真正输入密码解锁后 → false
-     */
     fun isLocked(ctx: Context): Boolean {
         return try {
             val km = ctx.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             km.isDeviceLocked
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * 🟢 判断手机当前是否正在解锁使用中（屏幕亮着且已解锁，如正在使用其他 App）
+     */
+    fun isPhoneInActiveUse(ctx: Context): Boolean {
+        return try {
+            val pm = ctx.getSystemService(Context.POWER_SERVICE) as PowerManager
+            val km = ctx.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            pm.isInteractive && !km.isKeyguardLocked
         } catch (_: Exception) {
             false
         }
@@ -54,30 +60,26 @@ object ScreenState {
     // ========== 弹卡判断 ==========
 
     /**
-     * 🟢 用户主动亮屏 → 允许弹卡
+     * 🟢 规则 1：用户主动亮屏（手动摁开屏幕） → 只要有到期卡片，立刻弹卡！
      */
+    @Suppress("UNUSED_PARAMETER")
     fun canShowOnUserWake(ctx: Context): Boolean {
-        if (!isLocked(ctx)) return false
-
-        // 无条件清除所有障碍
-        App.resetForeground()
-        Prefs.clearPause(ctx)
-        clearCooldown(ctx)
-
+        if (App.isForeground) return false
+        if (MemoDisplayActivity.isShowing) return false
         return true
     }
 
     /**
-     * 🟢 自动触发（闹钟）→ 必须冷却已过
+     * 🟢 规则 2 & 3：后台闹钟自动触发判断
+     * - 规则 2：30 分钟熄屏冷却期内不自动弹卡
+     * - 规则 3：用户在手机上使用其他 App 时（解锁使用中），完全不弹卡！
      */
     fun canAutoShow(ctx: Context): Boolean {
-        if (!isLocked(ctx)) return false
-
-        App.resetForeground()
-
+        if (App.isForeground) return false
+        if (MemoDisplayActivity.isShowing) return false
         if (Prefs.isPaused(ctx)) return false
-        if (cooldownRemaining(ctx) > 0) return false
-
+        if (isPhoneInActiveUse(ctx)) return false // 用户正在使用其他 App，完全不弹卡！
+        if (cooldownRemaining(ctx) > 0) return false // 30 分钟熄屏冷却期内不自动弹卡
         return true
     }
 }

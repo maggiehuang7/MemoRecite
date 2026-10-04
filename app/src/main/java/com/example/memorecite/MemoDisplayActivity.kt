@@ -38,14 +38,14 @@ class MemoDisplayActivity : AppCompatActivity() {
 
     private val autoCloseHandler = Handler(Looper.getMainLooper())
     private val autoCloseRunnable = Runnable {
+        // 无操作 1 分钟后自动熄屏关闭，清除常亮标志并开启 30 分钟冷却
         shouldRecordClose = true
+        try {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } catch (_: Exception) {}
         finish()
     }
 
-    /**
-     * 只监听 USER_PRESENT（真正解锁）
-     * SCREEN_OFF 交给 KeepAliveService 的 ScreenStateReceiver 统一处理
-     */
     private val userPresentReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_USER_PRESENT) {
@@ -59,14 +59,16 @@ class MemoDisplayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Prefs.isInQuietHours(this)) { finish(); return }
-        if (!ScreenState.isLocked(this)) { finish(); return }
-        App.resetForeground()
+        // ✅ 修改：删除 `if (!ScreenState.isLocked(this)) { finish(); return }`
+        // 原因：测试按钮 / 已解锁状态启动时会被这行直接 finish 掉，看不到弹屏
+        // 用户解锁逻辑由下面的 ACTION_USER_PRESENT 广播负责
+
         Prefs.clearPause(this)
 
         isShowing = true
         setContentView(R.layout.activity_memo_display)
 
+        // ✅ 修改：窗口标志放在 setContentView 之后，确保生效
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -76,6 +78,7 @@ class MemoDisplayActivity : AppCompatActivity() {
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
             )
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val filter = IntentFilter(Intent.ACTION_USER_PRESENT)
         registerReceiver(userPresentReceiver, filter)
@@ -96,14 +99,12 @@ class MemoDisplayActivity : AppCompatActivity() {
             return
         }
 
-        // 显示组名（图标 + 名称）
         tvGroupName.text = "${activeGroup?.icon ?: "📚"} ${activeGroup?.name ?: ""}"
 
         adapter = CardPagerAdapter(dueCards)
         viewPager.adapter = adapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                // 使用本地化的 "1 / N" 格式
                 tvIndicator.text = "${position + 1} / ${dueCards.size}"
             }
         })
@@ -125,6 +126,34 @@ class MemoDisplayActivity : AppCompatActivity() {
         resetAutoCloseTimer()
     }
 
+    // ✅ 新增：singleInstance 复用时会走这里，需要刷新卡片
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        Prefs.clearPause(this)
+        shouldRecordClose = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        loadDueCards()
+        if (dueCards.isEmpty()) {
+            shouldRecordClose = false
+            finish()
+            return
+        }
+
+        adapter = CardPagerAdapter(dueCards)
+        viewPager.adapter = adapter
+        viewPager.setCurrentItem(0, false)
+        tvIndicator.text = "1 / ${dueCards.size}"
+        tvGroupName.text = "${activeGroup?.icon ?: "📚"} ${activeGroup?.name ?: ""}"
+        resetAutoCloseTimer()
+    }
+
     override fun onResume() {
         super.onResume()
         isShowing = true
@@ -135,7 +164,6 @@ class MemoDisplayActivity : AppCompatActivity() {
         isShowing = false
     }
 
-    /** 触屏 → 重置 1 分钟计时 */
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev != null && (ev.action == MotionEvent.ACTION_DOWN ||
                     ev.action == MotionEvent.ACTION_MOVE)) {
@@ -153,16 +181,13 @@ class MemoDisplayActivity : AppCompatActivity() {
         groups = MemoStore.load(this)
         val now = System.currentTimeMillis()
 
-        // 🟢 用 allCardsRecursive 支持无限层级
-        // 找最早到期、且已开始的组
-        val candidateGroups = groups.filter {
-            val allCards = it.allCardsRecursive(groups)
-            allCards.isNotEmpty()
-                    && it.isStarted(groups, now)
-                    && !Prefs.isGroupSkipped(this, it.id)
-        }.sortedBy { g ->
+        val candidateGroups = groups.filter { g ->
             val allCards = g.allCardsRecursive(groups)
-            allCards.minOfOrNull { it.nextReviewTime } ?: Long.MAX_VALUE
+            allCards.isNotEmpty()
+                    && !Prefs.isGroupSkipped(this, g.id)
+                    && g.isStarted(groups, now)
+        }.sortedBy { g ->
+            g.allCardsRecursive(groups).minOfOrNull { it.nextReviewTime } ?: Long.MAX_VALUE
         }
 
         for (g in candidateGroups) {
@@ -208,7 +233,6 @@ class MemoDisplayActivity : AppCompatActivity() {
         val card = dueCards[position]
         val g = activeGroup
 
-        // 🟢 卡片自定义曲线 > 组的有效曲线（含继承）
         val intervals = card.customIntervals ?: run {
             g?.effectiveIntervals(groups) ?: Prefs.getIntervals(this)
         }
@@ -222,16 +246,14 @@ class MemoDisplayActivity : AppCompatActivity() {
             viewPager.setCurrentItem(position + 1, true)
         } else {
             val now = System.currentTimeMillis()
-            // 检查该组还有没有剩余
-            val remaining = activeGroup?.let { ag ->
-                ag.allCardsRecursive(groups).count { it.isDue(now) || it.isNew }
-            } ?: 0
+            val remaining = groups
+                .firstOrNull { it.id == activeGroup?.id }
+                ?.cards?.count { it.isDue(now) || it.isNew } ?: 0
 
             if (remaining > 0) {
                 reloadNextBatch()
             } else {
                 shouldRecordClose = false
-                AlarmScheduler.scheduleNext(this)
                 finish()
             }
         }
@@ -241,7 +263,6 @@ class MemoDisplayActivity : AppCompatActivity() {
         loadDueCards()
         if (dueCards.isEmpty()) {
             shouldRecordClose = false
-            AlarmScheduler.scheduleNext(this)
             finish()
             return
         }
@@ -258,12 +279,12 @@ class MemoDisplayActivity : AppCompatActivity() {
         autoCloseHandler.removeCallbacks(autoCloseRunnable)
         try { unregisterReceiver(userPresentReceiver) } catch (_: Exception) {}
 
-        // 记录冷却（所有非"用户主动操作"的关闭都记录）
         if (shouldRecordClose) {
             ScreenState.setLastCloseTime(this, System.currentTimeMillis())
         }
 
         MemoStore.save(this, groups)
-        AlarmScheduler.scheduleNext(this)
+        // ✅ 修改：删除 `AlarmScheduler.scheduleNext(this)`
+        // 由 Receiver 统一调度，避免双重调度导致闹钟链叠加
     }
 }

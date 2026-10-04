@@ -162,9 +162,10 @@ class GroupListActivity : AppCompatActivity() {
         AlarmScheduler.scheduleNext(this)
         handler.post(refreshTask)
 
-        if (Prefs.isPaused(this) && areAllPermissionsGranted()) {
+        if (Prefs.isPaused(this)) {
             Prefs.clearPause(this)
         }
+        PermissionUtils.checkAndRequestNotificationPermission(this)
         checkPermissionsOnce()
     }
 
@@ -185,11 +186,9 @@ class GroupListActivity : AppCompatActivity() {
     // ========== 权限 ==========
 
     private fun areAllPermissionsGranted(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
-        val overlay = Settings.canDrawOverlays(this)
-        val battery = (getSystemService(Context.POWER_SERVICE) as PowerManager)
-            .isIgnoringBatteryOptimizations(packageName)
-        return overlay && battery
+        return PermissionUtils.hasOverlayPermission(this) &&
+                PermissionUtils.hasBatteryOptimizationExemption(this) &&
+                PermissionUtils.hasExactAlarmPermission(this)
     }
 
     private fun checkPermissionsOnce() {
@@ -198,11 +197,6 @@ class GroupListActivity : AppCompatActivity() {
             Prefs.setPermissionPrompted(this)
             return
         }
-        val needOverlay = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                !Settings.canDrawOverlays(this)
-        val needBattery = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                !(getSystemService(Context.POWER_SERVICE) as PowerManager)
-                    .isIgnoringBatteryOptimizations(packageName)
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.perm_title))
@@ -210,15 +204,7 @@ class GroupListActivity : AppCompatActivity() {
             .setCancelable(false)
             .setPositiveButton(getString(R.string.perm_go_settings)) { _, _ ->
                 Prefs.setPermissionPrompted(this)
-                Prefs.pauseFor(this, 3 * 60 * 1000L)
-                if (needOverlay) {
-                    startActivity(Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:$packageName")
-                    ))
-                } else if (needBattery) {
-                    openBatterySettings()
-                }
+                PermissionUtils.showBackgroundPermissionGuideDialog(this)
             }
             .setNegativeButton(getString(R.string.perm_later)) { _, _ ->
                 Prefs.setPermissionPrompted(this)

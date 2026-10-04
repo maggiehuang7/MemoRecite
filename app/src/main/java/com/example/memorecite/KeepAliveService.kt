@@ -22,19 +22,54 @@ class KeepAliveService : Service() {
         private const val CHANNEL_ID = "keep_alive_channel"
         private const val NOTIFICATION_ID = 9999
         private const val CHANNEL_NAME = "后台运行"
-        private const val HEARTBEAT_INTERVAL_MS = 30_000L
+        private const val HEARTBEAT_INTERVAL_MS = 15_000L
+        private const val SELF_WAKEUP_REQUEST = 8888
+        private const val SELF_WAKEUP_INTERVAL_MS = 15 * 60 * 1000L  // 15 分钟
 
         fun start(context: Context) {
             val intent = Intent(context, KeepAliveService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (_: Exception) {
+                try { context.startService(intent) } catch (_: Exception) {}
             }
         }
 
         fun stop(context: Context) {
             context.stopService(Intent(context, KeepAliveService::class.java))
+        }
+
+        /** 🟢 自我唤醒：每 15 分钟拉起自己一次（即使被杀也能恢复） */
+        fun scheduleSelfWakeup(context: Context) {
+            val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val pi = PendingIntent.getBroadcast(
+                context,
+                SELF_WAKEUP_REQUEST,
+                Intent(context, SelfWakeupReceiver::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val triggerAt = System.currentTimeMillis() + SELF_WAKEUP_INTERVAL_MS
+
+            try {
+                val info = AlarmManager.AlarmClockInfo(triggerAt, pi)
+                am.setAlarmClock(info, pi)
+            } catch (_: Exception) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (am.canScheduleExactAlarms()) {
+                            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+                        } else {
+                            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+                        }
+                    } else {
+                        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+                    }
+                } catch (_: Exception) {}
+            }
         }
     }
 
@@ -56,10 +91,20 @@ class KeepAliveService : Service() {
         super.onCreate()
         createChannel()
 
+        val contentIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, GroupListActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("MemoRecite")
-            .setContentText("正在监控复习提醒")
+            .setContentText("正在后台监控卡片复习提醒")
             .setSmallIcon(android.R.drawable.ic_popup_reminder)
+            .setContentIntent(contentIntent)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setSilent(true)
@@ -71,8 +116,10 @@ class KeepAliveService : Service() {
 
         registerScreenReceiver()
 
+        // 启动心跳 + 自我唤醒
         AlarmScheduler.scheduleNext(this)
         handler.post(heartbeatTask)
+        scheduleSelfWakeup(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -89,6 +136,7 @@ class KeepAliveService : Service() {
             unregisterReceiver(screenStateReceiver)
         } catch (_: Exception) {}
 
+        // 自动重启：立即重启 + 设置下一次自我唤醒
         try {
             val restartIntent = Intent(applicationContext, KeepAliveService::class.java)
             val pi = PendingIntent.getService(
@@ -120,7 +168,7 @@ class KeepAliveService : Service() {
             addAction(Intent.ACTION_USER_PRESENT)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(screenStateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            registerReceiver(screenStateReceiver, filter, Context.RECEIVER_EXPORTED)
         } else {
             registerReceiver(screenStateReceiver, filter)
         }
