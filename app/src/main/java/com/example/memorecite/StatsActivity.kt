@@ -29,6 +29,6 @@ class StatsActivity : AppCompatActivity() {
             g.allCardsRecursive(groups).count { it.reviewLevel >= 5 }
         }
         findViewById<TextView>(R.id.tvSummary).text =
-            "🔥 连续打卡 $streak 天 · 共 ${groups.size} 组 · $totalCards 张卡片 · 已掌握 $totalMastered 张"
+            getString(R.string.task_stats_summary_with_streak, streak, groups.size, totalCards, totalMastered)
     }
 }

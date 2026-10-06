@@ -18,6 +18,7 @@
     <string name="settings_title">⚙️ 全局默认设置</string>
     <string name="settings_subtitle">这里的值只作为「新建记忆组」时的默认值。已经建好的组，请长按组 → ⚙️ 组设置 单独调整。</string>
     <string name="settings_first_delay">首次复习延迟（分钟）</string>
+    <string name="settings_daily_new_target">每日新卡学习目标上限（默认 80）</string>
     <string name="settings_intervals">复习间隔（分钟，英文逗号分隔）</string>
     <string name="settings_intervals_hint">💡 默认艾宾浩斯：5分, 30分, 12时, 1天, 2天, 4天, 7天, 15天, 30天, 60天</string>
     <string name="settings_save">保存设置</string>
@@ -260,6 +261,22 @@
     <string name="import_restore_ok_msg">请完全退出 App 再重新打开，才能看到恢复的数据。</string>
     <string name="import_restore_failed">恢复失败</string>
 
-    <!-- 时间格式 -->
+    <!-- 每日任务系统 -->
+    <string name="task_title">🎯 今日记忆任务</string>
+    <string name="task_status_in_progress">⏳ 进行中</string>
+    <string name="task_status_completed">✅ 今日完成</string>
+    <string name="task_status_clear_reviews">先清复习</string>
+    <string name="task_status_arrears">⚠️ 欠账停新</string>
+    <string name="task_new_cards_progress">新卡学习：%1$d / %2$d</string>
+    <string name="task_review_cards_progress">卡片复习：%1$d / %2$d</string>
+    <string name="task_footer_summary">交互: %1$d次 · 正确率: %2$.1f%% · 连续打卡: %3$d天</string>
+    <string name="task_toast_completed">🎉 恭喜！今日记忆任务全满达标！连续打卡 %d 天！</string>
+    <string name="task_toast_clear_due_first">当前有 %d 张待复习卡片，请先清复习！</string>
+    <string name="task_toast_arrears_blocked">连续 2 天未达标（欠账停新），请先复习旧卡片！</string>
+    <string name="task_recent_7_days_title">📅 最近 7 天记忆打卡</string>
+    <string name="task_group_mastery_title">📚 分组记忆掌握度</string>
+    <string name="task_stats_summary_with_streak">🔥 连续打卡 %1$d 天 · 共 %2$d 组 · %3$d 张卡片 · 已掌握 %4$d 张</string>
+
+    <!-- 格式化与时间 -->
     <string name="time_format">MM-dd HH:mm</string>
 </resources>

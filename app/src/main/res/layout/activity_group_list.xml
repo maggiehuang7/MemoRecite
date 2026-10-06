@@ -86,7 +86,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🎯 今日记忆任务"
+                android:text="@string/task_title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
@@ -95,7 +95,7 @@
                 android:id="@+id/tvTaskStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏳ 进行中"
+                android:text="@string/task_status_in_progress"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/accent_light"

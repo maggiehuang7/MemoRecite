@@ -25,22 +25,23 @@ class DailyStatsAdapter(private val list: List<DailyStats>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
+        val ctx = holder.itemView.context
         holder.tvDate.text = item.date
 
         if (item.isCompleted) {
-            holder.tvStatus.text = "✅ 打卡成功"
-            holder.tvStatus.setTextColor(holder.itemView.resources.getColor(R.color.accent, null))
+            holder.tvStatus.text = ctx.getString(R.string.task_status_completed)
+            holder.tvStatus.setTextColor(ctx.resources.getColor(R.color.accent, null))
         } else if (item.date != DailyStatsStore.todayStr()) {
-            holder.tvStatus.text = "⚠️ 未达标(欠账)"
-            holder.tvStatus.setTextColor(holder.itemView.resources.getColor(R.color.accent_light, null))
+            holder.tvStatus.text = ctx.getString(R.string.task_status_arrears)
+            holder.tvStatus.setTextColor(ctx.resources.getColor(R.color.accent_light, null))
         } else {
-            holder.tvStatus.text = "⏳ 进行中"
-            holder.tvStatus.setTextColor(holder.itemView.resources.getColor(R.color.text_secondary, null))
+            holder.tvStatus.text = ctx.getString(R.string.task_status_in_progress)
+            holder.tvStatus.setTextColor(ctx.resources.getColor(R.color.text_secondary, null))
         }
 
-        holder.tvNewProgress.text = "新卡: ${item.newCardsDone}/${item.newCardsTarget}"
-        holder.tvReviewProgress.text = "复习: ${item.reviewsDone}/${item.reviewsTarget}"
-        holder.tvRate.text = "正确率: ${"%.1f".format(item.correctRate)}%"
+        holder.tvNewProgress.text = ctx.getString(R.string.task_new_cards_progress, item.newCardsDone, item.newCardsTarget)
+        holder.tvReviewProgress.text = ctx.getString(R.string.task_review_cards_progress, item.reviewsDone, item.reviewsTarget)
+        holder.tvRate.text = "%.1f%%".format(item.correctRate)
     }
 
     override fun getItemCount(): Int = list.size

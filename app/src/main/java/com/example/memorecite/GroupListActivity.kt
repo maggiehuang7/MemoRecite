@@ -191,33 +191,33 @@ class GroupListActivity : AppCompatActivity() {
 
         when {
             isArrears -> {
-                tvStatus?.text = "⚠️ 欠账停新"
+                tvStatus?.text = getString(R.string.task_status_arrears)
                 tvStatus?.setTextColor(resources.getColor(R.color.accent_light, null))
             }
             dueCount > 0 -> {
-                tvStatus?.text = "先清复习"
+                tvStatus?.text = getString(R.string.task_status_clear_reviews)
                 tvStatus?.setTextColor(resources.getColor(R.color.accent_light, null))
             }
             stats.isCompleted -> {
-                tvStatus?.text = "✅ 今日完成"
+                tvStatus?.text = getString(R.string.task_status_completed)
                 tvStatus?.setTextColor(resources.getColor(R.color.accent, null))
             }
             else -> {
-                tvStatus?.text = "⏳ 进行中"
+                tvStatus?.text = getString(R.string.task_status_in_progress)
                 tvStatus?.setTextColor(resources.getColor(R.color.text_secondary, null))
             }
         }
 
-        tvNewProg?.text = "新卡学习：${stats.newCardsDone} / ${stats.newCardsTarget}"
+        tvNewProg?.text = getString(R.string.task_new_cards_progress, stats.newCardsDone, stats.newCardsTarget)
         pbNew?.max = 100
         pbNew?.progress = if (stats.newCardsTarget == 0) 100 else ((stats.newCardsDone.toDouble() / stats.newCardsTarget) * 100).toInt().coerceIn(0, 100)
 
-        tvRevProg?.text = "卡片复习：${stats.reviewsDone} / ${stats.reviewsTarget}"
+        tvRevProg?.text = getString(R.string.task_review_cards_progress, stats.reviewsDone, stats.reviewsTarget)
         pbRev?.max = 100
         pbRev?.progress = if (stats.reviewsTarget == 0) 100 else ((stats.reviewsDone.toDouble() / stats.reviewsTarget) * 100).toInt().coerceIn(0, 100)
 
         val streak = DailyStatsStore.getStreak(this)
-        tvFooter?.text = "交互: ${stats.totalInteractions}次 · 正确率: ${"%.1f".format(stats.correctRate)}% · 连续打卡: ${streak}天"
+        tvFooter?.text = getString(R.string.task_footer_summary, stats.totalInteractions, stats.correctRate, streak)
     }
 
     override fun onPause() {
@@ -322,11 +322,11 @@ class GroupListActivity : AppCompatActivity() {
             } else 0
         }
         if (dueCount > 0) {
-            Toast.makeText(this, "当前有 $dueCount 张待复习卡片，请先清复习！", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.task_toast_clear_due_first, dueCount), Toast.LENGTH_LONG).show()
             return
         }
         if (DailyStatsStore.checkArrears(this)) {
-            Toast.makeText(this, "连续 2 天未达标（欠账停新），请先复习旧卡片！", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.task_toast_arrears_blocked), Toast.LENGTH_LONG).show()
             return
         }
 

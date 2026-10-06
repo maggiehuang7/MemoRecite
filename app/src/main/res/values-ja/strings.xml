@@ -246,5 +246,22 @@
     <string name="import_restore_ok_msg">アプリを完全に終了して再起動すると復元データが表示されます。</string>
     <string name="import_restore_failed">復元失敗</string>
 
+    <!-- 日次ミッションシステム -->
+    <string name="settings_daily_new_target">日次新規カード目標（デフォルト 80）</string>
+    <string name="task_title">🎯 今日のミッション</string>
+    <string name="task_status_in_progress">⏳ 進行中</string>
+    <string name="task_status_completed">✅ 本日完了</string>
+    <string name="task_status_clear_reviews">先に復習</string>
+    <string name="task_status_arrears">⚠️ 未達により停止</string>
+    <string name="task_new_cards_progress">新規学習：%1$d / %2$d</string>
+    <string name="task_review_cards_progress">カード復習：%1$d / %2$d</string>
+    <string name="task_footer_summary">タップ: %1$d回 · 正解率: %2$.1f%% · 連続打刻: %3$d日</string>
+    <string name="task_toast_completed">🎉 おめでとうございます！今日のミッション達成！連続 %d 日！</string>
+    <string name="task_toast_clear_due_first">要復習カードが %d 枚あります。先に復習してください！</string>
+    <string name="task_toast_arrears_blocked">2日連続未達成。先に旧カードを復習してください！</string>
+    <string name="task_recent_7_days_title">📅 過去 7 日間の記録</string>
+    <string name="task_group_mastery_title">📚 グループ習得状況</string>
+    <string name="task_stats_summary_with_streak">🔥 連続 %1$d 日 · %2$d グループ · %3$d 枚 · 習得済み %4$d 枚</string>
+
     <string name="time_format">MM-dd HH:mm</string>
 </resources>

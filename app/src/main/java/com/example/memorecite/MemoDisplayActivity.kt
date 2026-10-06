@@ -262,7 +262,7 @@ class MemoDisplayActivity : AppCompatActivity() {
             stats.completedAt = System.currentTimeMillis()
             val streak = DailyStatsStore.updateStreak(this)
             stats.streakDay = streak
-            android.widget.Toast.makeText(this, "🎉 恭喜！今日记忆任务全满达标！连续打卡 $streak 天！", android.widget.Toast.LENGTH_LONG).show()
+            android.widget.Toast.makeText(this, getString(R.string.task_toast_completed, streak), android.widget.Toast.LENGTH_LONG).show()
         }
 
         DailyStatsStore.save(this, stats)

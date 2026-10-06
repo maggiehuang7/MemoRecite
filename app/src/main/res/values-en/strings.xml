@@ -246,5 +246,22 @@
     <string name="import_restore_ok_msg">Please fully exit the app and reopen to see the restored data.</string>
     <string name="import_restore_failed">Restore failed</string>
 
+    <!-- Daily Mission System -->
+    <string name="settings_daily_new_target">Daily New Cards Target (default 80)</string>
+    <string name="task_title">🎯 Today\'s Mission</string>
+    <string name="task_status_in_progress">⏳ In Progress</string>
+    <string name="task_status_completed">✅ Completed</string>
+    <string name="task_status_clear_reviews">Clear Reviews First</string>
+    <string name="task_status_arrears">⚠️ Arrears Paused</string>
+    <string name="task_new_cards_progress">New Cards: %1$d / %2$d</string>
+    <string name="task_review_cards_progress">Reviews: %1$d / %2$d</string>
+    <string name="task_footer_summary">Taps: %1$d · Accuracy: %2$.1f%% · Streak: %3$d days</string>
+    <string name="task_toast_completed">🎉 Congratulations! Today\'s mission completed! Streak: %d days!</string>
+    <string name="task_toast_clear_due_first">You have %d due cards. Please clear reviews first!</string>
+    <string name="task_toast_arrears_blocked">Uncompleted for 2 days. Please review old cards first!</string>
+    <string name="task_recent_7_days_title">📅 Last 7 Days History</string>
+    <string name="task_group_mastery_title">📚 Group Mastery Progress</string>
+    <string name="task_stats_summary_with_streak">🔥 %1$d days streak · %2$d groups · %3$d cards · %4$d mastered</string>
+
     <string name="time_format">MM-dd HH:mm</string>
 </resources>
