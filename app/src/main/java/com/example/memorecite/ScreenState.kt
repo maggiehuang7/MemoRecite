@@ -60,12 +60,15 @@ object ScreenState {
     // ========== 弹卡判断 ==========
 
     /**
-     * 🟢 规则 1：用户主动亮屏（手动摁开屏幕） → 只要有到期卡片，立刻弹卡！
+     * 🟢 用户主动亮屏（手动开启屏幕） → 清除冷却，直接恢复弹卡，进入正常提醒循环
      */
-    @Suppress("UNUSED_PARAMETER")
     fun canShowOnUserWake(ctx: Context): Boolean {
         if (App.isForeground) return false
         if (MemoDisplayActivity.isShowing) return false
+
+        // 手动开启屏幕 = 用户想要复习，清除 30 分钟熄屏冷却，恢复正常提醒循环
+        clearCooldown(ctx)
+
         return true
     }
 

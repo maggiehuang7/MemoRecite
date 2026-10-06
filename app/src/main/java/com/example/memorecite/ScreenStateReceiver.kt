@@ -21,6 +21,8 @@ class ScreenStateReceiver : BroadcastReceiver() {
 
     private fun handleScreenOff(context: Context) {
         Prefs.clearPause(context)
+        // 手动锁屏或用完手机熄屏时，设置 30 分钟后台静默冷却（不自动打扰）
+        ScreenState.setLastCloseTime(context, System.currentTimeMillis())
         AlarmScheduler.scheduleNext(context)
     }
 

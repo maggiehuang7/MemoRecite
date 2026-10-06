@@ -231,14 +231,41 @@ class MemoDisplayActivity : AppCompatActivity() {
         val position = viewPager.currentItem
         if (position >= dueCards.size) return
         val card = dueCards[position]
+        val isCardNew = card.isNew
         val g = activeGroup
 
         val intervals = card.customIntervals ?: run {
             g?.effectiveIntervals(groups) ?: Prefs.getIntervals(this)
         }
 
+        // 🟢 记录每日任务统计
+        val stats = DailyStatsStore.load(this)
+        val wasCompleted = stats.isCompleted
+
+        if (isCardNew) {
+            stats.newCardsDone++
+        } else {
+            stats.reviewsDone++
+        }
+        stats.totalInteractions++
+
+        if (quality == EbbinghausScheduler.QUALITY_GOOD || quality == EbbinghausScheduler.QUALITY_VAGUE) {
+            stats.correctCount++
+        } else {
+            stats.wrongCount++
+        }
+
         EbbinghausScheduler.schedule(card, quality, intervals)
         MemoStore.save(this, groups)
+
+        if (!wasCompleted && stats.isCompleted) {
+            stats.completedAt = System.currentTimeMillis()
+            val streak = DailyStatsStore.updateStreak(this)
+            stats.streakDay = streak
+            android.widget.Toast.makeText(this, "🎉 恭喜！今日记忆任务全满达标！连续打卡 $streak 天！", android.widget.Toast.LENGTH_LONG).show()
+        }
+
+        DailyStatsStore.save(this, stats)
 
         resetAutoCloseTimer()
 

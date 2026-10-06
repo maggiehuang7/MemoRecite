@@ -12,6 +12,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.text.InputType
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ class GroupListActivity : AppCompatActivity() {
     private val refreshTask = object : Runnable {
         override fun run() {
             adapter.notifyDataSetChanged()
+            updateTodayTaskCard()
             handler.postDelayed(this, 30_000L)
         }
     }
@@ -159,6 +161,7 @@ class GroupListActivity : AppCompatActivity() {
         allGroups = MemoStore.load(this)
         updateTitle()
         refreshList()
+        updateTodayTaskCard()
         AlarmScheduler.scheduleNext(this)
         handler.post(refreshTask)
 
@@ -167,6 +170,54 @@ class GroupListActivity : AppCompatActivity() {
         }
         PermissionUtils.checkAndRequestNotificationPermission(this)
         checkPermissionsOnce()
+    }
+
+    private fun updateTodayTaskCard() {
+        val stats = DailyStatsStore.load(this)
+        val now = System.currentTimeMillis()
+        val dueCount = allGroups.sumOf { g ->
+            if (g.isStarted(allGroups, now)) {
+                g.allCardsRecursive(allGroups).count { it.isDue(now) }
+            } else 0
+        }
+        val isArrears = DailyStatsStore.checkArrears(this)
+
+        val tvStatus = findViewById<TextView>(R.id.tvTaskStatus)
+        val tvNewProg = findViewById<TextView>(R.id.tvNewProgress)
+        val pbNew = findViewById<ProgressBar>(R.id.pbNewCards)
+        val tvRevProg = findViewById<TextView>(R.id.tvReviewProgress)
+        val pbRev = findViewById<ProgressBar>(R.id.pbReviews)
+        val tvFooter = findViewById<TextView>(R.id.tvTaskFooter)
+
+        when {
+            isArrears -> {
+                tvStatus?.text = "⚠️ 欠账停新"
+                tvStatus?.setTextColor(resources.getColor(R.color.accent_light, null))
+            }
+            dueCount > 0 -> {
+                tvStatus?.text = "先清复习"
+                tvStatus?.setTextColor(resources.getColor(R.color.accent_light, null))
+            }
+            stats.isCompleted -> {
+                tvStatus?.text = "✅ 今日完成"
+                tvStatus?.setTextColor(resources.getColor(R.color.accent, null))
+            }
+            else -> {
+                tvStatus?.text = "⏳ 进行中"
+                tvStatus?.setTextColor(resources.getColor(R.color.text_secondary, null))
+            }
+        }
+
+        tvNewProg?.text = "新卡学习：${stats.newCardsDone} / ${stats.newCardsTarget}"
+        pbNew?.max = 100
+        pbNew?.progress = if (stats.newCardsTarget == 0) 100 else ((stats.newCardsDone.toDouble() / stats.newCardsTarget) * 100).toInt().coerceIn(0, 100)
+
+        tvRevProg?.text = "卡片复习：${stats.reviewsDone} / ${stats.reviewsTarget}"
+        pbRev?.max = 100
+        pbRev?.progress = if (stats.reviewsTarget == 0) 100 else ((stats.reviewsDone.toDouble() / stats.reviewsTarget) * 100).toInt().coerceIn(0, 100)
+
+        val streak = DailyStatsStore.getStreak(this)
+        tvFooter?.text = "交互: ${stats.totalInteractions}次 · 正确率: ${"%.1f".format(stats.correctRate)}% · 连续打卡: ${streak}天"
     }
 
     override fun onPause() {
@@ -264,6 +315,21 @@ class GroupListActivity : AppCompatActivity() {
     // ========== 组管理 ==========
 
     private fun addGroup() {
+        val now = System.currentTimeMillis()
+        val dueCount = allGroups.sumOf { g ->
+            if (g.isStarted(allGroups, now)) {
+                g.allCardsRecursive(allGroups).count { it.isDue(now) }
+            } else 0
+        }
+        if (dueCount > 0) {
+            Toast.makeText(this, "当前有 $dueCount 张待复习卡片，请先清复习！", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (DailyStatsStore.checkArrears(this)) {
+            Toast.makeText(this, "连续 2 天未达标（欠账停新），请先复习旧卡片！", Toast.LENGTH_LONG).show()
+            return
+        }
+
         val input = EditText(this).apply {
             hint = getString(R.string.gl_hint_group_name)
             inputType = InputType.TYPE_CLASS_TEXT

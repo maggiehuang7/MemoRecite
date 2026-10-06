@@ -15,8 +15,19 @@ object Prefs {
     private const val KEY_QUIET_START_MIN = "quiet_start_min"
     private const val KEY_QUIET_END_HOUR = "quiet_end_hour"
     private const val KEY_QUIET_END_MIN = "quiet_end_min"
+    private const val KEY_DAILY_NEW_TARGET = "daily_new_target"
 
     private const val SKIP_COOLDOWN_MS = 30 * 60 * 1000L
+
+    fun getDailyNewTarget(context: Context): Int {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_DAILY_NEW_TARGET, 80)
+    }
+
+    fun saveDailyNewTarget(context: Context, target: Int) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putInt(KEY_DAILY_NEW_TARGET, target).apply()
+    }
 
     val DEFAULT_INTERVALS: List<Long> = listOf(
         5L, 30L, 720L, 1440L, 2880L, 5760L, 10080L, 21600L, 43200L, 86400L

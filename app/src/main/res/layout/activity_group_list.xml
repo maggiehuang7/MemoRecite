@@ -65,6 +65,107 @@
             android:background="@drawable/bg_button_secondary" />
     </LinearLayout>
 
+    <!-- 今日任务卡片 -->
+    <LinearLayout
+        android:id="@+id/cardTodayTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:padding="14dp"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🎯 今日记忆任务"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvTaskStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏳ 进行中"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/accent_light"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:background="@drawable/bg_button_secondary" />
+        </LinearLayout>
+
+        <!-- 新卡进度 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/tvNewProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="新卡学习：0 / 80"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pbNewCards"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:max="100"
+            android:progressTint="@color/accent"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 复习进度 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/tvReviewProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="卡片复习：0 / 0"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pbReviews"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:max="100"
+            android:progressTint="@color/accent_light"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 底部汇总 -->
+        <TextView
+            android:id="@+id/tvTaskFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="交互: 0次 · 正确率: 0.0% · 连续打卡: 0天"
+            android:textSize="11sp"
+            android:textColor="@color/text_hint" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"

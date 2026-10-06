@@ -17,6 +17,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var etFirstDelay: EditText
     private lateinit var etIntervals: EditText
+    private lateinit var etDailyNewTarget: EditText
 
     private val importLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -45,9 +46,11 @@ class SettingsActivity : AppCompatActivity() {
 
         etFirstDelay = findViewById(R.id.etFirstDelay)
         etIntervals = findViewById(R.id.etIntervals)
+        etDailyNewTarget = findViewById(R.id.etDailyNewTarget)
 
         etFirstDelay.setText(Prefs.getFirstDelayMinutes(this).toString())
         etIntervals.setText(Prefs.getIntervals(this).joinToString(", "))
+        etDailyNewTarget.setText(Prefs.getDailyNewTarget(this).toString())
 
         // 🌐 语言按钮
         val btnLang = findViewById<Button>(R.id.btnLanguage)
@@ -70,6 +73,8 @@ class SettingsActivity : AppCompatActivity() {
             }
             Prefs.saveFirstDelay(this, firstDelay)
             Prefs.saveIntervals(this, intervals)
+            val dailyTarget = etDailyNewTarget.text.toString().toIntOrNull() ?: 80
+            Prefs.saveDailyNewTarget(this, dailyTarget.coerceAtLeast(1))
             Toast.makeText(this, getString(R.string.common_save), Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -77,6 +82,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnReset).setOnClickListener {
             etFirstDelay.setText("1")
             etIntervals.setText(Prefs.DEFAULT_INTERVALS.joinToString(", "))
+            etDailyNewTarget.setText("80")
             Toast.makeText(this, getString(R.string.settings_reset), Toast.LENGTH_SHORT).show()
         }
 
