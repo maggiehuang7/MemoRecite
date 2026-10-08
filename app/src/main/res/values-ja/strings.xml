@@ -247,6 +247,13 @@
     <string name="import_restore_failed">復元失敗</string>
 
     <!-- 日次ミッションシステム -->
+    <!-- Settings -->
+    <string name="settings_font_size_title">🔤 カードの文字サイズ</string>
+    <string name="settings_font_size_button">🔤 文字サイズ（現在：%s）</string>
+    <string name="font_size_small">小 (80%)</string>
+    <string name="font_size_normal">標準 (100%)</string>
+    <string name="font_size_large">大 (125%)</string>
+    <string name="font_size_xlarge">特大 (150%)</string>
     <string name="settings_daily_new_target">日次新規カード目標（デフォルト 80）</string>
     <string name="task_title">🎯 今日のミッション</string>
     <string name="task_status_in_progress">⏳ 進行中</string>

@@ -16,8 +16,19 @@ object Prefs {
     private const val KEY_QUIET_END_HOUR = "quiet_end_hour"
     private const val KEY_QUIET_END_MIN = "quiet_end_min"
     private const val KEY_DAILY_NEW_TARGET = "daily_new_target"
+    private const val KEY_FONT_SIZE_SCALE = "font_size_scale"
 
     private const val SKIP_COOLDOWN_MS = 30 * 60 * 1000L
+
+    fun getFontSizeScale(context: Context): Float {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getFloat(KEY_FONT_SIZE_SCALE, 1.0f)
+    }
+
+    fun saveFontSizeScale(context: Context, scale: Float) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putFloat(KEY_FONT_SIZE_SCALE, scale).apply()
+    }
 
     fun getDailyNewTarget(context: Context): Int {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

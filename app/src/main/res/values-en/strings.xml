@@ -247,6 +247,13 @@
     <string name="import_restore_failed">Restore failed</string>
 
     <!-- Daily Mission System -->
+    <!-- Settings -->
+    <string name="settings_font_size_title">🔤 Card Font Size</string>
+    <string name="settings_font_size_button">🔤 Font Size (current: %s)</string>
+    <string name="font_size_small">Small (80%)</string>
+    <string name="font_size_normal">Normal (100%)</string>
+    <string name="font_size_large">Large (125%)</string>
+    <string name="font_size_xlarge">Extra Large (150%)</string>
     <string name="settings_daily_new_target">Daily New Cards Target (default 80)</string>
     <string name="task_title">🎯 Today\'s Mission</string>
     <string name="task_status_in_progress">⏳ In Progress</string>

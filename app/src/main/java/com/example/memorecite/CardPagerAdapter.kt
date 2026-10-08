@@ -37,6 +37,10 @@ class CardPagerAdapter(
             holder.ivImage.visibility = View.GONE
         }
 
+        val scale = Prefs.getFontSizeScale(ctx)
+        holder.tvFront.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 20f * scale)
+        holder.tvBack.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 28f * scale)
+
         holder.tvFront.text = card.front
         holder.tvFront.visibility = if (card.front.isBlank()) View.GONE else View.VISIBLE
         holder.tvBack.text = card.back

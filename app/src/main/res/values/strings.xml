@@ -20,6 +20,12 @@
     <string name="settings_first_delay">首次复习延迟（分钟）</string>
     <string name="settings_daily_new_target">每日新卡学习目标上限（默认 80）</string>
     <string name="settings_intervals">复习间隔（分钟，英文逗号分隔）</string>
+    <string name="settings_font_size_title">🔤 弹卡字体大小</string>
+    <string name="settings_font_size_button">🔤 字体大小（当前：%s）</string>
+    <string name="font_size_small">小 (80%)</string>
+    <string name="font_size_normal">标准 (100%)</string>
+    <string name="font_size_large">大 (125%)</string>
+    <string name="font_size_xlarge">特大 (150%)</string>
     <string name="settings_intervals_hint">💡 默认艾宾浩斯：5分, 30分, 12时, 1天, 2天, 4天, 7天, 15天, 30天, 60天</string>
     <string name="settings_save">保存设置</string>
     <string name="settings_reset">恢复艾宾浩斯默认</string>

@@ -57,6 +57,10 @@ class SettingsActivity : AppCompatActivity() {
         btnLang.text = getString(R.string.settings_language_button, LocaleHelper.getCurrentName(this))
         btnLang.setOnClickListener { showLanguagePicker() }
 
+        // 🔤 字体大小按钮
+        updateFontSizeButtonLabel()
+        findViewById<Button>(R.id.btnFontSize)?.setOnClickListener { showFontSizePicker() }
+
         findViewById<Button>(R.id.btnSave).setOnClickListener {
             val firstDelay = etFirstDelay.text.toString().toLongOrNull()
             if (firstDelay == null || firstDelay < 0) {
@@ -90,6 +94,47 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnPermissions).setOnClickListener { PermissionUtils.showBackgroundPermissionGuideDialog(this) }
         findViewById<Button>(R.id.btnExport).setOnClickListener { exportData() }
         findViewById<Button>(R.id.btnImport).setOnClickListener { showImportOptions() }
+    }
+
+    private fun showFontSizePicker() {
+        val currentScale = Prefs.getFontSizeScale(this)
+        val options = arrayOf(
+            getString(R.string.font_size_small),
+            getString(R.string.font_size_normal),
+            getString(R.string.font_size_large),
+            getString(R.string.font_size_xlarge)
+        )
+        val scales = floatArrayOf(0.8f, 1.0f, 1.25f, 1.5f)
+        val selectedIdx = when {
+            currentScale <= 0.85f -> 0
+            currentScale <= 1.1f -> 1
+            currentScale <= 1.35f -> 2
+            else -> 3
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.settings_font_size_title))
+            .setSingleChoiceItems(options, selectedIdx) { dialog, which ->
+                val pickedScale = scales[which]
+                Prefs.saveFontSizeScale(this, pickedScale)
+                updateFontSizeButtonLabel()
+                dialog.dismiss()
+                Toast.makeText(this, getString(R.string.common_save), Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(getString(R.string.common_cancel), null)
+            .show()
+    }
+
+    private fun updateFontSizeButtonLabel() {
+        val scale = Prefs.getFontSizeScale(this)
+        val label = when {
+            scale <= 0.85f -> getString(R.string.font_size_small)
+            scale <= 1.1f -> getString(R.string.font_size_normal)
+            scale <= 1.35f -> getString(R.string.font_size_large)
+            else -> getString(R.string.font_size_xlarge)
+        }
+        val btnFont = findViewById<Button>(R.id.btnFontSize)
+        btnFont?.text = getString(R.string.settings_font_size_button, label)
     }
 
     private fun showLanguagePicker() {
